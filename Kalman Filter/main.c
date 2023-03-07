@@ -37,8 +37,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-MPU6050_t MPU6050_1;
-MPU6050_t MPU6050_2;
+MPU6050_t MPU6050;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -50,7 +49,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-float AngX_1, AngY_1, AngX_2, AngY_2, diff_X, diff_Y, meanX, meanY, diffToMean_X1, diffToMean_X2, diffToMean_Y1, diffToMean_Y2;
+float AngX, AngY;
 
 /* USER CODE END 0 */
 
@@ -86,33 +85,17 @@ int main(void)
   MX_I2C1_Init();
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
-
+  MPU6050_Init(&hi2c1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  MPU6050_Read_All(&hi2c1, &MPU6050_1);
-	  MPU6050_Read_All(&hi2c2, &MPU6050_2);
+	  MPU6050_Read_All(&hi2c1, &MPU6050);
 
-	  AngX_1 = MPU6050_1.KalmanAngleX;
-	  AngY_1 = MPU6050_1.KalmanAngleY;
-
-	  AngX_2 = MPU6050_2.KalmanAngleX;
-	  AngY_2 = MPU6050_2.KalmanAngleY;
-
-	  diff_X = (AngX_1 - AngX_2);
-	  diff_Y = (AngY_1 - AngY_2);
-
-	  meanX = (AngX_1 + AngX_2) / 2;
-	  meanY = (AngY_1 + AngY_2) / 2;
-
-	  diffToMean_X1 = meanX - AngX_1;
-	  diffToMean_X2 = meanX - AngX_2;
-
-	  diffToMean_Y1 = meanY - AngY_1;
-	  diffToMean_Y2 = meanY - AngY_2;
+	  AngX = MPU6050.KalmanAngleX;
+	  AngY = MPU6050.KalmanAngleY;
 
 	  HAL_Delay (500);
     /* USER CODE END WHILE */
